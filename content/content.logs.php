@@ -38,7 +38,8 @@
 		}
 		
 		public function __viewIndex()
-		{		
+		{
+
 			$this->setPageType('table');
 			$this->setTitle('Symphony &ndash; PayPal Payment Transactions');
 			$this->appendSubheading('Logs');
@@ -59,7 +60,7 @@
 				array('Invoice/Entry', 'col'),
 				array('Date', 'col'),
 				array('Payment Type', 'col'),
-				array('Payent Status', 'col'),
+				array('Payment Status', 'col'),
 				array('Name', 'col'),
 				array('Email', 'col'),
 				array('Address', 'col'),
@@ -96,7 +97,8 @@
 						$link = URL . '/symphony/publish/' . $section->get('handle') . '/edit/' . $entry->get('id') . '/';
 
 						# Date
-						$col[] = Widget::TableData( Widget::Anchor( General::sanitize($log_invoice) ) );
+						$col[] = Widget::TableData( Widget::Anchor( General::sanitize($log_invoice),$link ) );
+						
 					} else {
 						$col[] = Widget::TableData( General::sanitize($log_invoice) );
 					}

@@ -291,7 +291,7 @@
 		
 		public function add_filter_documentation_to_event($context)
 		{
-      if ( ! in_array('paypal-payments', $context['selected'])) return;
+      if (!is_array($context['selected']) ||  ! in_array('paypal-payments', $context['selected'])) return;
 
       $context['documentation'][] = new XMLElement('h3', 'PayPal Payments: Reroute to PayPal');
 			$context['documentation'][] = new XMLElement('p', 'You can pass data to PayPal&#8217;s server by mapping fields to most of the variables/fields listed in <a href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_html_Appx_websitestandard_htmlvariables">Website Payments Standard documentation</a>. The example below shows how you would map <code>amount</code>, <code>first-name</code>/<code>last-name</code> and <code>description</code> to their PayPal equivalents:');
@@ -411,9 +411,10 @@
 			$output = '<html><head><title>Continue to PayPal</title></head>
 <style type="text/css">button{background:#eee;border:3px #ccc solid;color:#444;display:block;font:normal 200%/1.4 Georgia, Palatino, serif;margin:19% auto 40px;padding:20px 40px;-moz-border-radius:30px;-webkit-border-radius:30px;cursor:pointer;}button:hover{background:#444;color:#fff;border-color:#222;}</style>
 <script type="text/javascript">
-document.write(\'<style type="text/css">button{display:none}</style>\');
+//document.write(\'<style type="text/css">button{display:none}</style>\');
 </script>
-<body onload="document.forms.paypal.submit();">
+<!--<body onload="document.forms.paypal.submit();">-->
+<body>
 <form id="paypal" method="post" action="'.$url.'">';
 			foreach($data as $field => $value)
 			{

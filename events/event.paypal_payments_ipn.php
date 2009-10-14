@@ -230,7 +230,7 @@
 					foreach ($fields as $field)
 					{
 						$label = $field['label'];
-						# Check if entry fields match values returned from SecureTrading
+						# Check if entry fields match values returned from PayPal IPN
 						if (in_array($label, $valid_variables))
 						{
 							$value = $log[$label];
@@ -247,12 +247,29 @@
 					$output->appendChild(new XMLElement('error', 'No matching entry, could not reconcile payment data.'));
 				}
 				
-				# Save log
-				$this->_Parent->Database->insert($log, 'tbl_paypalpayments_logs');
-				return $result;
-			}
-			else
-			{
+				# Check for Duplicate Entries
+				# Checks both the transaction id and the transaction type, as PayPal can send a dataset 
+				# which has a null (and hence non-unique) value for txn_id
+				$existing_log_entry_result = $this->_Parent->Database->fetchRow(0, "
+					SELECT
+						l.*
+					FROM
+						`tbl_paypalpayments_logs` AS l
+					WHERE
+						l.txn_id = '{$log['txn_id']}' AND
+						l.txn_type = '{$log['txn_type']}'
+					LIMIT 1
+				");
+				
+				if (!$existing_log_entry_result) {
+					# Save log
+					$this->_Parent->Database->insert($log, 'tbl_paypalpayments_logs');
+					return $result;
+				} else {
+					return NULL;
+				}
+				
+			} else {
 				return NULL;
 			}
 		}
